@@ -22,6 +22,8 @@ async function main() {
 	const puzzleId = "realOctopus";
 	const pieceId = parseInt(prompt("What piece is your starting point?"));
 
+	// TODO: Get info from puzzle...
+
 	// TODO: Check if pieceId is not a missing piece...
 
 	const query = `
