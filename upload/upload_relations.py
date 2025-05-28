@@ -33,8 +33,17 @@ def relation(csv_filename):
                 }}]->(b)
                 """
 
+                inverse_query = f"""
+                MATCH (a:Piece {{id: '{to_id}'}}), (b:Piece {{id: '{from_id}'}})
+                MERGE (a)-[:CONNECTED {{
+                    fromPort: '{to_port}',
+                    toPort: '{from_port}'
+                }}]->(b)
+                """
+
                 with driver.session() as session:
                     session.run(query)
+                    session.run(inverse_query)
 
                 total += 1
 
