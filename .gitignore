@@ -2,7 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=pythonvanilla
 
 ### PythonVanilla ###
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimized / DLL files\
+.env
 __pycache__/
 *.py[cod]
 *$py.class
@@ -67,6 +68,5 @@ cover/
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
-
 
 # End of https://www.toptal.com/developers/gitignore/api/pythonvanilla
