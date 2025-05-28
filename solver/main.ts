@@ -1,25 +1,25 @@
 import neo4j, { Driver, Session } from "npm:neo4j-driver";
 
-// const uri = "bolt://localhost:7687";
-// const username = "neo4j";
-// const password = "6OV31H6Q5NdSCqGatBtpV27Mcd-gKctC99ZzFEAE1H0";
-//
-// const driver: Driver = neo4j.driver(uri, neo4j.auth.basic(username, password));
-//
-// async function executeQuery(query: string, params: object) {
-// 	const session: Session = driver.session();
-// 	try {
-// 		const result = await session.executeRead((tx) => tx.run(query, params));
-// 		return result.records;
-// 	} finally {
-// 		await session.close();
-// 	}
-// }
-//
+const uri = Deno.env.get("NEO4J_URI");
+const username = Deno.env.get("NEO4J_USER");
+const password = Deno.env.get("NEO4J_PASSWORD");
+
+const driver: Driver = neo4j.driver(uri, neo4j.auth.basic(username, password));
+
+async function executeQuery(query: string, params: object) {
+	const session: Session = driver.session();
+	try {
+		const result = await session.executeRead((tx) => tx.run(query, params));
+		return result.records;
+	} finally {
+		await session.close();
+	}
+}
 
 type Connection = {
-	Piece: PuzzlePiece;
-	Where: string;
+	FromPort: string;
+	ToPort: string;
+	ConnectedPiece: PuzzlePiece;
 };
 
 type PuzzlePiece = {
@@ -34,12 +34,24 @@ type PuzzleInfo = {
 };
 
 async function main() {
-	// const query = "MATCH (n:Person {name: $name}) RETURN n";
-	// const params = { name: "Alice" };
-	// const records = await executeQuery(query, params);
-	console.log("Hello World!");
+	// const puzzleId = prompt("What puzzle do you whish to solve?");
+	const puzzleId = "realOctopus";
+	const pieceId = parseInt(prompt("What piece is your starting point?"));
+
+	const query = `
+MATCH (cs:Piece {id: $pieceId}) -[:BELONGS]-> (:Puzzle {custom_id: $puzzleId})
+CALL apoc.path.expandConfig(cs,{relationshipFilter:'CONNECTED>',uniqueness:'NODE_GLOBAL'}) YIELD path
+RETURN path`;
+	const params = { pieceId, puzzleId };
+	const records: any[] = await executeQuery(query, params);
+	records.forEach((r) => {
+		console.log(r.get("path"));
+	});
 	// console.log(records);
+
+	// const root = constructTree(records, startingPieceId);
 }
 
-main().catch(console.error);
-// .finally(() => driver.close());
+main()
+	.catch(console.error)
+	.finally(() => driver.close());
