@@ -9,7 +9,7 @@ uri = os.environ.get('NEO4J_URI')
 username = os.environ.get('NEO4J_USER')
 password = os.environ.get('NEO4J_PASSWORD')
 
-def relation(csv_filename):
+def create_relations(csv_filename, puzzle_id):
     driver = GraphDatabase.driver(uri, auth=(username, password))
 
     try:
@@ -18,26 +18,31 @@ def relation(csv_filename):
             reader = csv.DictReader(file)
             for row in reader:
                 # Read from named fields in the header
-                from_id = row['from'].strip()
-                to_id = row['to'].strip()
-                from_port = row['fromPort'].strip()
-                to_port = row['toPort'].strip()
+                from_id = int(row['from'].strip())
+                to_id = int(row['to'].strip())
+                from_port = int(row['fromPort'].strip())
+                to_port = int(row['toPort'].strip())
 
                 print(f"Creating connection: {from_id} ({from_port}) → {to_id} ({to_port})")
-
+                
                 query = f"""
-                MATCH (a:Piece {{id: '{from_id}'}}), (b:Piece {{id: '{to_id}'}})
-                MERGE (a)-[:CONNECTED {{
-                    fromPort: '{from_port}',
-                    toPort: '{to_port}'
-                }}]->(b)
+                MATCH 
+                    (:Puzzle {{custom_id: '{puzzle_id}'}}) <-[:BELONGS]- (a:Piece {{id: {from_id}}}),
+                    (b:Piece {{id: {to_id}}}) -[:BELONGS]-> (:Puzzle {{custom_id: '{puzzle_id}'}})
+                MERGE 
+                    (a)-[:CONNECTED {{
+                        fromPort: {from_port},
+                        toPort: {to_port}
+                    }}]->(b)
                 """
 
                 inverse_query = f"""
-                MATCH (a:Piece {{id: '{to_id}'}}), (b:Piece {{id: '{from_id}'}})
+                MATCH
+                    (:Puzzle {{custom_id: '{puzzle_id}'}}) <-[:BELONGS]- (a:Piece {{id: {to_id}}}),
+                    (b:Piece {{id: {from_id}}}) -[:BELONGS]-> (:Puzzle {{custom_id: '{puzzle_id}'}})
                 MERGE (a)-[:CONNECTED {{
-                    fromPort: '{to_port}',
-                    toPort: '{from_port}'
+                    fromPort: {to_port},
+                    toPort: {from_port}
                 }}]->(b)
                 """
 
@@ -88,7 +93,7 @@ def fetch_all_connections():
 
 if __name__ == '__main__':
     print("Connecting to Neo4j with", username, uri)
-    result = relation('relations.csv')
+    result = create_relations('relations.csv', 1)
     print(result)
     print("LIST OF RELATIONS")
     print(fetch_all_connections())

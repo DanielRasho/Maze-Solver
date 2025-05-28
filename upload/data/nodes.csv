@@ -1,7 +1,7 @@
-id,type,isMissing
-1,corner,FALSE
-2,center,FALSE
-3,corner,FALSE
-4,middle,FALSE
-5,middle,FALSE
-6,corner,FALSE
+id,type,isMissing,ports
+1,corner,FALSE,"1,2,3"
+2,center,FALSE,"1,2,3"
+3,corner,FALSE,"1"
+4,middle,FALSE,"1,2,3"
+5,middle,FALSE,"1,2,3"
+6,corner,FALSE,"1"
