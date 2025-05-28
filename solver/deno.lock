@@ -3,6 +3,7 @@
   "specifiers": {
     "jsr:@std/assert@1": "1.0.13",
     "jsr:@std/internal@^1.0.6": "1.0.8",
+    "npm:neo4j-driver@*": "5.28.1",
     "npm:neo4j-driver@^5.28.1": "5.28.1"
   },
   "jsr": {
