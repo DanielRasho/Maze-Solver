@@ -1,0 +1,6 @@
+from,relation,direction,to
+1,c,d,2
+2,c,l,4
+4,c,r,3
+2,c,r,5
+5,c,r,6
