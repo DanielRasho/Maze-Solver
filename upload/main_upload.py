@@ -1,4 +1,5 @@
 from upload_nodes import upload_puzzle_pieces
+from upload_relations import create_relations
 
 puzzle_theme = "Real Marine Life"
 puzzle_material = "Wood"
@@ -10,6 +11,9 @@ Created BELONG relationships between the puzzle and its pieces.
 return de custom id of the puzzle.
 """
 puzzle_id = upload_puzzle_pieces(puzzle_theme, puzzle_material, custom_id)
+
+result = create_relations('relations.csv', puzzle_id)
+print(result)
 
 """
 @TODO Upload the relations between the pieces using puzzle_id.
