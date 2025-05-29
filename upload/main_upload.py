@@ -1,9 +1,9 @@
 from upload_nodes import upload_puzzle_pieces
 from upload_relations import create_relations
 
-puzzle_theme = "Real Marine Life"
-puzzle_material = "Wood"
-custom_id = "realOctopus"
+puzzle_theme = "dinosaurs"
+puzzle_material = "wood"
+custom_id = "dino"
 
 """
 Uploads puzzle pieces to the Neo4j database with the specified theme, material, and custom ID.
